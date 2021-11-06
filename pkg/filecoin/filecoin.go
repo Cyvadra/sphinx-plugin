@@ -1,17 +1,13 @@
-package main
+package filecoin
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/Cyvadra/sphinx-service/pkg/grpc"
-	"github.com/NpoolPlatform/sphinx-service/message/npool"
-	"github.com/myxtype/filecoin-client"
+
+	"github.com/Cyvadra/sphinx-plugin/pkg/grpc"
 )
 
 var host string
-
-func init() {
-	fmt.Println("hello")
-}
 
 func lotusRpcUrl(host string) string {
 	return fmt.Sprintf("http://%v:1234/rpc/v0", host)
@@ -21,20 +17,21 @@ func SetHost(str string) {
 	host = lotusRpcUrl(str)
 }
 
-func WalletBalance(address string) (int64, error) {
-	bh, err := grpc.Request(lotusRpcUrl(host), []string{address}, "Filecoin.WalletBalance")
+func GetBalance(address string) (string, error) {
+	respStr, err := grpc.Request(lotusRpcUrl(host), []string{address}, "Filecoin.WalletBalance")
 	if err != nil {
-		log.Errorf(log.Fields{}, "lotusapi request error: %v", err)
-		return -1, err
+		return "", err
 	}
-	head := types.TipSet{}
-	err = json.Unmarshal(bh, &head)
+	resl := RespGetBalance{}
+	err = json.Unmarshal(respStr, &resl)
 	if err != nil {
-		log.Errorf(log.Fields{}, "cannot unmarshal chain head resp, err is %v", err)
-		return -2, err
+		return "", err
 	}
-
-	return int64(head.Height()), nil
+	return resl.Result, err
 }
 
-func WalletBalance(address string)
+type RespGetBalance struct {
+	Id      int32  `json:"id"`
+	JsonRPC string `json:"jsonrpc"`
+	Result  string `json:"result"`
+}

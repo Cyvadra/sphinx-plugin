@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	filecoin.SetHost("10.155.8.32")
+	filecoin.SetHost("172.16.30.117")
 	fmt.Println(filecoin.WalletBalance("f0121"))
 }

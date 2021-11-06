@@ -1,7 +1,6 @@
 package filecoin
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/Cyvadra/sphinx-plugin/pkg/grpc"
@@ -19,22 +18,10 @@ func SetHost(str string) {
 }
 
 func GetBalance(address string) (string, error) {
-	respStr, err := grpc.Request(host, []string{address}, "Filecoin.WalletBalance")
+	respBytes, err := grpc.Request(host, []string{address}, "Filecoin.WalletBalance")
 	if err != nil {
 		log.Errorf(log.Fields{}, "lotusapi request error, %v", err)
 		return "", err
 	}
-	resl := RespGetBalance{}
-	err = json.Unmarshal(respStr, &resl)
-	if err != nil {
-		log.Errorf(log.Fields{}, "cannot unmarshal chain resp, ori str: %v", respStr)
-		return "", err
-	}
-	return resl.Result, err
-}
-
-type RespGetBalance struct {
-	Id      int32  `json:"id"`
-	JsonRPC string `json:"jsonrpc"`
-	Result  string `json:"result"`
+	return string(respBytes), err
 }

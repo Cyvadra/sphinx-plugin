@@ -1,27 +1,25 @@
-package filecoin
+package fil
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/Cyvadra/sphinx-plugin/pkg/grpc"
-	log "github.com/EntropyPool/entropy-logger"
+	"github.com/filecoin-project/go-address"
+	"github.com/myxtype/filecoin-client"
 )
 
-var host string
+var Client *filecoin.Client
 
 func lotusRpcUrl(host string) string {
 	return fmt.Sprintf("http://%v:1234/rpc/v0", host)
 }
 
-func SetHost(str string) {
-	host = lotusRpcUrl(str)
+func SetHostWithToken(str string, token string) {
+	Client = filecoin.NewClient(lotusRpcUrl(str), token)
 }
 
-func GetBalance(address string) (string, error) {
-	respBytes, err := grpc.Request(host, []string{address}, "Filecoin.WalletBalance")
-	if err != nil {
-		log.Errorf(log.Fields{}, "lotusapi request error, %v", err)
-		return "", err
-	}
-	return string(respBytes), err
+func GetBalance(addr string) (string, error) {
+	addrStd, _ := address.NewFromString(addr)
+	bal, err := Client.WalletBalance(context.Background(), addrStd)
+	return bal.String(), err
 }

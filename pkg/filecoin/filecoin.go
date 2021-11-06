@@ -27,7 +27,7 @@ func GetBalance(address string) (string, error) {
 	resl := RespGetBalance{}
 	err = json.Unmarshal(respStr, &resl)
 	if err != nil {
-		log.Errorf(log.Fields{}, "cannot unmarshal chain resp, %v", err)
+		log.Errorf(log.Fields{}, "cannot unmarshal chain resp, ori str: %v", respStr)
 		return "", err
 	}
 	return resl.Result, err

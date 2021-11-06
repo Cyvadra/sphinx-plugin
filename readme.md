@@ -3,7 +3,9 @@
 统一多币种数字货币钱包的管理服务
 
 * [x] 搭建基本框架
-* [ ] FIL部分coding
-* [ ] FIL UnitTest
+* [x] FIL部分coding
+* [x] FIL UnitTest
 * [ ] 增加BTC支持
-* [ ] 并入到sphinx-service
+* [x] 并入到sphinx-service
+
+archieved on 6th, Nov.

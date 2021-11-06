@@ -7,5 +7,5 @@ import (
 
 func main() {
 	filecoin.SetHost("172.16.30.117")
-	fmt.Println(filecoin.WalletBalance("f0121"))
+	fmt.Println(filecoin.GetBalance("f0121"))
 }
